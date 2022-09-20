@@ -1,7 +1,7 @@
-# Heroku Buildpack: MongoDB 4.1.5
+# Heroku Buildpack: MongoDB database-tools
 
 This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) to run mongo commands (http://www.mongodb.org/). <br/>
-It installs MongoDB 4.1.5 for Linux environment (stack: heroku-22).
+It installs MongoDB database-tools (like mongodump and mongoimport) for Linux environment (stack: heroku-20)
 
 ## Usage
 

@@ -6,28 +6,28 @@ set -o pipefail   # don't ignore exit codes when piping output
 set -o posix      # more strict failures in subshells
 
 # Configure Directories
-build_dir=$1
-cache_dir=$2
-env_dir=$3
-bp_dir=$(cd $(dirname $0); cd ..; pwd)
-heroku_dir=$build_dir/.heroku
-mkdir -p $heroku_dir/mongo
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+HEROKU_DIR=$BUILD_DIR/.heroku
+OS='ubuntu2004'
+
+mkdir -p $HEROKU_DIR/mongo
 warnings=$(mktemp)
 
-# Install MongoDB 4.0 to use mongo commands
-mongo_version="4.1.5"
-echo "-----> Downloading and installing MongoDB version ${mongo_version}..."
-[[ $STACK = "heroku-22" ]] && os_id="amazon"
+MONGO_DBTOOLS_VERSION="100.6.0"
+ARCH="x86_64"
 
-file_name="mongodb-linux-x86_64-${os_id}-${mongo_version}.tgz"
-folder_name=`echo "$file_name" | sed 's/\.tgz$//'`
-download_url="https://fastdl.mongodb.org/linux/${file_name}"
+# Installing MongoDB Database Tools
+echo "Installing MongoDB Database tools ..."
+TOOLS_BASE_FILENAME="mongodb-database-tools-${OS}-${ARCH}-${MONGO_DBTOOLS_VERSION}"
+download_url="https://fastdl.mongodb.org/tools/db/${TOOLS_BASE_FILENAME}.tgz"
 curl $download_url -s -o - | tar xzf - -C /tmp
 
-# Move MongoDB binaries into the app directory
-mv "/tmp/${folder_name}"/* $heroku_dir/mongo
-chmod +x $heroku_dir/mongo/bin/*
+# Move MongoDB Database Tools into the app directory
+mv /tmp/${TOOLS_BASE_FILENAME}/* $HEROKU_DIR/mongo
+chmod +x $HEROKU_DIR/mongo/bin/*
 
 echo "-----> Creating runtime environment"
-mkdir -p $build_dir/.profile.d
-echo "export PATH=\"\$HOME/.heroku/mongo/bin:\$PATH\"" > $build_dir/.profile.d/mongo.sh
+mkdir -p $BUILD_DIR/.profile.d
+echo "export PATH=\"\$HOME/.heroku/mongo/bin:\$PATH\"" > $BUILD_DIR/.profile.d/mongo.sh
